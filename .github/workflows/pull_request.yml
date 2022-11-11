@@ -4,36 +4,33 @@ on:
   pull_request:
     branches:
       - sandbox
+      - prod
 
 jobs:
-  lint:
+  Lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.9
-
-      - name: Run terraform fmt check
-        run: terraform fmt -check -diff -recursive ./terraform
         
-  plan:
-    name: Plan
-    env:
-      TF_VAR_allowed_account_id: ${{ secrets.ALLOWED_ACCOUNT_ID }}
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        path:
-          - dev
-          - stage
-          - prod
-
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+          
+      - name: Install Pylint
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+          
+      - name: Lint
+        run: |
+          find . -name '*.py' -exec pylint {} \;
+  
+  Terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -46,7 +43,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: us-east-1
+          aws-region: us-east-2
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -82,7 +79,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
           message: |
-            ## ${{ matrix.path }} plan
+            ## Plan
             ```diff
             ${{ env.PLAN }}
             ```
