@@ -1,14 +1,13 @@
-name: Terraform Plan
+name: Sandbox Pipeline
 
 on:
   pull_request:
-    branches:
-      - sandbox
-      - prod
+    branches: [sandbox]
 
 jobs:
   Lint:
     name: Lint
+    environment: Sandbox
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -26,11 +25,13 @@ jobs:
           
       - name: Lint
         run: |
-          find . -name '*.py' -exec pylint {} \;
+          python lint.py --path ./src --threshold 2
   
   Terraform:
     name: Terraform
+    environment: Sandbox
     runs-on: ubuntu-latest
+    needs: Lint
     steps:
       - name: Check out code
         uses: actions/checkout@v2
