@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "s3Bucket" {
-     bucket = "test-bucket-11-11-22"
+     bucket = "[BUCKET_NAME_HERE]"
      acl       = "public-read"
 
      policy  = <<EOF
@@ -12,8 +12,14 @@ resource "aws_s3_bucket" "s3Bucket" {
              "s3:GetObject"
           ],
          "effect" : "Allow",
-         "resource" : "arn:aws:s3:::test-bucket-11-11-22/*",
+         "resource" : "arn:aws:s3:::[BUCKET_NAME_HERE]/*",
          "principal" : "*"
       }
     ]
   }
+EOF
+
+   website {
+       index_document = "index.html"
+   }
+}
