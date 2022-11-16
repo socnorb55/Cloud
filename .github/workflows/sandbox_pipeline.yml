@@ -25,7 +25,7 @@ jobs:
 
       - name: Lint
         run: |
-          python lint.py --path ./src --threshold 2
+          pylint ./src --exit-zero
 
   Terraform:
     name: Terraform
