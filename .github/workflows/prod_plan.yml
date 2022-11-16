@@ -31,7 +31,7 @@ jobs:
     name: Terraform Plan
     environment: Prod
     runs-on: ubuntu-latest
-    needs: Zip
+    needs: Lint
     steps:
       - name: Check out code
         uses: actions/checkout@v2
