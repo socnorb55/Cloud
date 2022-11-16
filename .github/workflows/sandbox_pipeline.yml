@@ -42,8 +42,11 @@ jobs:
           terraform_version: latest
 
       - name: Plan Terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           cd terraform/
-          terraform init -backend-config='bucket=terraform-state-bucket-aws-cloud-sandbox'
+          terraform init -backend-config="bucket=terraform-state-bucket-aws-cloud-sandbox" -backend-config="access_key=${AWS_ACCESS_KEY_ID}" -backend-config="secret_key=${AWS_SECRET_ACCESS_KEY}" -backend-config="region=us-east-2"
           terraform fmt -diff ./
           terraform plan --out=tfplan -var-file="sandbox.tfvars"
