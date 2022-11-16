@@ -36,10 +36,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Plan Terraform
+      - name: Initialize Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: latest
+
+      - name: Plan Terraform
         run: |
           cd terraform/
           terraform init -backend-config='bucket=terraform-state-bucket-aws-cloud-sandbox'
