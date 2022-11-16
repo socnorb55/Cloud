@@ -27,26 +27,6 @@ jobs:
         run: |
           pylint ./src --fail-under 8
 
-  Zip:
-    name: Zip
-    runs-on: ubuntu-latest
-    needs: Lint
-    steps:
-      - name: Zip Code
-        run: |
-          sudo -s
-          apt-get update
-          apt-get install -y -q zip
-          mkdir build
-          cp -rf src build
-          cd build
-          zip ../src.zip -r .
-          cd ..
-          mkdir -p layers/python
-          cd layers/
-          pip install -r ../requirements.txt -t python
-          zip ../lambda_layers.zip -r .
-
   Terraform:
     name: Terraform Plan
     environment: Sandbox
