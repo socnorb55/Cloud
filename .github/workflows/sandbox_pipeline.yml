@@ -12,21 +12,21 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-        
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-          
+
       - name: Install Pylint
         run: |
           python -m pip install --upgrade pip
           pip install pylint
-          
+
       - name: Lint
         run: |
           python lint.py --path ./src --threshold 2
-  
+
   Terraform:
     name: Terraform
     environment: Sandbox
@@ -36,51 +36,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Setup Terraform
+      - name: Plan Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.9
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: us-east-2
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: Initialize Terraform
+          terraform_version: latest
         run: |
           cd terraform/
-          terraform init -input=false          
-
-      - name: Plan Terraform
-        id: plan
-        continue-on-error: true
-        run: |
-          cd terraform/
-          terraform plan -input=false -no-color -out=tfplan \
-          && terraform show -no-color tfplan          
-
-      - name: Reformat Plan
-        run: |
-          echo '${{ steps.plan.outputs.stdout || steps.plan.outputs.stderr }}' \
-          | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > plan.txt          
-
-      - name: Put Plan in Env Var
-        run: |
-          PLAN=$(cat plan.txt)
-          echo "PLAN<<EOF" >> $GITHUB_ENV
-          echo "$PLAN" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV          
-
-      - name: Post Plan to GitHub PR
-        uses: mshick/add-pr-comment@v1
-        with:
-          allow-repeats: true
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-          message: |
-            ## Plan
-            ```diff
-            ${{ env.PLAN }}
-            ```
+          terraform init -backend-config='bucket=terraform-state-bucket-aws-cloud-sandbox'
+          terraform fmt -diff ./
+          terraform plan --out=tfplan -var-file="sandbox.tfvars"
