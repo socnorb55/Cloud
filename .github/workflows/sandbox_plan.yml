@@ -43,7 +43,7 @@ jobs:
           cd ..
           mkdir -p layers/python
           cd layers
-          pip install -r ../src/requirements.txt -t python
+          pip install -r ../requirements.txt -t python
           zip ../lambda_layers.zip -r
 
   Terraform:
