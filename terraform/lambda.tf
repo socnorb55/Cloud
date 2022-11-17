@@ -12,6 +12,6 @@ resource "aws_lambda_function" "test_lambda" {
 
 resource "aws_lambda_layer_version" "python_packages_layer" {
     layer_name ="lambda_layer_${var.env}"
-    filename ="${path.root}/../lambda_layers.zip"
-    source_code_hash = filebase64sha256("${path.root}/../lambda_layers.zip")
+    filename ="${path.root}/lambda_layers.zip"
+    source_code_hash = filebase64sha256("${path.root}/lambda_layers.zip")
 }
