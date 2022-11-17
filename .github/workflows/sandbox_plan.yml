@@ -32,11 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: Lint
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
       - name: Zip File
         run: |
-          ls
           mkdir build
-          cp -rf ./src build
+          cp -rf src build
           zip ../src.zip -r .
           cd ..
           mkdir -p layers/python
