@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Zip File
         run: |
-          pwd
+          ls
           mkdir build
           cp -rf /src build
           zip ../src.zip -r .
