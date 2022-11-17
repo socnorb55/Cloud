@@ -36,7 +36,7 @@ jobs:
         run: |
           ls
           mkdir build
-          cp -rf /src build
+          cp -rf ./src build
           zip ../src.zip -r .
           cd ..
           mkdir -p layers/python
