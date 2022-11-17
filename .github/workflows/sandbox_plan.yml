@@ -46,7 +46,7 @@ jobs:
           ls
           cd layers
           pip install -r ../Cloud/src/requirements.txt -t python
-          zip ../lambda_layers.zip -r
+          zip ../lambda_layers.zip -r .
 
   Terraform:
     name: Terraform Plan
