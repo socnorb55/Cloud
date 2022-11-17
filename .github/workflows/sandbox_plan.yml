@@ -50,7 +50,7 @@ jobs:
     name: Terraform Plan
     environment: Sandbox
     runs-on: ubuntu-latest
-    needs: Lint
+    needs: Zip
     steps:
       - name: Check out code
         uses: actions/checkout@v2

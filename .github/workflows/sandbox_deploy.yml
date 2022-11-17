@@ -27,11 +27,30 @@ jobs:
         run: |
           pylint ./src --fail-under 8
 
+  Zip:
+    name: Zip
+    runs-on: ubuntu-latest
+    needs: Lint
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Zip File
+        run: |
+          mkdir build
+          cp -rf src build
+          zip ../src.zip -r .
+          cd ..
+          mkdir -p layers/python
+          cd layers
+          pip install -r ../requirements.txt -t python
+          zip ../lambda_layers.zip -r
+
   Terraform:
     name: Terraform Deploy
     environment: Sandbox
     runs-on: ubuntu-latest
-    needs: Lint
+    needs: Zip
     steps:
       - name: Check out code
         uses: actions/checkout@v2
