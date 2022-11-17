@@ -37,11 +37,13 @@ jobs:
 
       - name: Zip File
         run: |
+          ls
           mkdir build
           cp -rf src build
           zip ../src.zip -r .
           cd ..
           mkdir -p layers/python
+          ls
           cd layers
           pip install -r ../requirements.txt -t python
           zip ../lambda_layers.zip -r
