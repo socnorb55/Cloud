@@ -27,8 +27,9 @@ jobs:
         run: |
           pylint ./src --fail-under 8
 
-  Zip:
-    name: Zip
+  Terraform:
+    name: Terraform Deploy
+    environment: Sandbox
     runs-on: ubuntu-latest
     needs: Lint
     steps:
@@ -40,15 +41,6 @@ jobs:
           mkdir build
           cp -rf src build
           zip ../src.zip -r .
-
-  Terraform:
-    name: Terraform Deploy
-    environment: Sandbox
-    runs-on: ubuntu-latest
-    needs: Zip
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - name: Initialize Terraform
         uses: hashicorp/setup-terraform@v1
