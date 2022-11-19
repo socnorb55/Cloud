@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir build
           cp -rf src build
-          zip ../src.zip -r .
+          zip /src.zip -r .
           
   Terraform:
     name: Terraform Plan
