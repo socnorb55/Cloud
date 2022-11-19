@@ -17,3 +17,9 @@ terraform {
 provider "aws" {
   region  = "us-east-2"
 }
+
+data "archive_file" "src" {
+  type = "zip"
+  output_path = "${path.root}/src.zip"
+  source_dir = "../src"
+}
