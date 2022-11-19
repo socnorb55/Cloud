@@ -36,13 +36,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Zip File
-        run: |
-          mkdir build
-          cp -rf src build
-          cd build
-          zip ../src.zip -r .
-
       - name: Initialize Terraform
         uses: hashicorp/setup-terraform@v1
         with:
