@@ -5,8 +5,8 @@ on:
     branches: [prod]
 
 jobs:
-  Lint:
-    name: Lint
+  Plan:
+    name: Prod Plan
     environment: Prod
     runs-on: ubuntu-latest
     steps:
@@ -26,34 +26,6 @@ jobs:
       - name: Lint
         run: |
           pylint ./src --fail-under 8
-
-  Zip:
-    name: Zip
-    runs-on: ubuntu-latest
-    needs: Lint
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Zip File
-        run: |
-          mkdir build
-          cp -rf src build
-          zip ../src.zip -r .
-          cd ..
-          mkdir -p layers/python
-          cd layers
-          pip install -r ../Cloud/src/requirements.txt -t python
-          zip ../lambda_layers.zip -r .
-
-  Terraform:
-    name: Terraform Plan
-    environment: Prod
-    runs-on: ubuntu-latest
-    needs: Zip
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
 
       - name: Initialize Terraform
         uses: hashicorp/setup-terraform@v1
